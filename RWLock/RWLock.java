@@ -15,19 +15,18 @@ public class RWlock {
     * å "låse opp" etter bruk. 
     */
    public class Key {
-	   private boolean released = false;    
-	   private boolean write;
-	   
-	   public Key(boolean w)
-	      {write = w; }
-	   
-	   /* Kan bare brukes en gang */
-	   
-	   public void release() {
-           if (!released)
-        	   RWlock.this.release(write);
-           released = true;
-	   }
+       private boolean released = false;    
+       private boolean write;
+   
+       public Key(boolean w)
+          {write = w; }
+   
+       /* Kan bare brukes en gang */
+       public void release() {
+          if (!released)
+             RWlock.this.release(write);
+            released = true;
+       }
    }
    
    
@@ -45,27 +44,27 @@ public class RWlock {
    public synchronized Key getLock(boolean write) 
       throws InterruptedException
    {
-	  while (wlocked)
-		  wait(); 
-	  if (write) {
-		  while (readers > 0 && !wlocked)    /* <-- OBS! vi trenger å legge til en test på wlocked her. Hvorfor? */
-		     wait();
-	      wlocked = true; 
-	  }
-	  else
-		 readers++;
-	  
-	  return new Key(write); 
+       while (wlocked)
+          wait(); 
+         if (write) {
+            while (readers > 0 && !wlocked)    /* <-- OBS! vi trenger å legge til en test på wlocked her. Hvorfor? */
+               wait();
+            wlocked = true; 
+         }
+         else
+            readers++;
+
+         return new Key(write); 
    }
    
    
    
    
    private synchronized void release(boolean write) {
-	   if (write)
-		   wlocked = false;
-	   else
-		   readers--;
-	   notifyAll(); 
+      if (write)
+         wlocked = false;
+      else
+         readers--;
+      notifyAll(); 
    }   
 }
