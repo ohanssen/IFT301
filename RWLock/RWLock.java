@@ -47,7 +47,7 @@ public class RWlock {
        while (wlocked)
           wait(); 
          if (write) {
-            while (readers > 0 && !wlocked)    /* <-- OBS! vi trenger å legge til en test på wlocked her. Hvorfor? */
+            while (readers > 0 || wlocked)  
                wait();
             wlocked = true; 
          }
